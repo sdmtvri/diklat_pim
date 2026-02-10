@@ -379,12 +379,12 @@
       
       if (isDirektorat) {
         if (satuanKerjaName === "Direktorat Umum") {
-          options += '<option value="Kepala Sub Bagian Umum">Kepala Sub Bagian Umum</option>';
-          options += '<option value="Kepala Sub Bagian Dewan Pengawas">Kepala Sub Bagian Dewan Pengawas</option>';
-          options += '<option value="Kepala Sub Bagian Direktur Utama">Kepala Sub Bagian Direktur Utama</option>';
+          options += '<option value="Kepala Sub Bagian Tata Usaha Umum">Kepala Sub Bagian Tata Usaha Umum</option>';
+          options += '<option value="Kepala Sub Bagian Tata Usaha Dewan Pengawas">Kepala Sub Bagian Tata Usaha Dewan Pengawas</option>';
+          options += '<option value="Kepala Sub Bagian Tata Usaha Direktur Utama">Kepala Sub Bagian Tata Usaha Direktur Utama</option>';
           options += '<option value="Kepala Bagian Pengadaan">Kepala Bagian Pengadaan</option>';
         } else {
-          options += '<option value="Kepala Sub Bagian">Kepala Sub Bagian</option>';
+          options += '<option value="Kepala Sub Bagian Tata Usaha">Kepala Sub Bagian Tata Usaha</option>';
         }
       } else {
         if (satuanKerjaName === "Satuan Pengawasan Intern") {
@@ -396,7 +396,7 @@
         } else {
           options += '<option value="Kepala Stasiun TVRI">Kepala Stasiun TVRI</option>';
         }
-        options += '<option value="Kepala Sub Bagian">Kepala Sub Bagian</option>';
+        options += '<option value="Kepala Sub Bagian Tata Usaha">Kepala Sub Bagian Tata Usaha</option>';
       }
 
       jabatanSelect.innerHTML = options;
