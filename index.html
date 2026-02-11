@@ -109,33 +109,6 @@
        </div>
       </div>
 
-      <!-- Diklat Status Section -->
-      <div class="mb-8">
-       <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-        <span class="w-8 h-8 badge-blue rounded-lg flex items-center justify-center mr-3">
-         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-         </svg>
-        </span> 
-        Status Diklat Kepemimpinan
-       </h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-         <label class="block text-sm font-medium text-gray-700 mb-3">Apakah Anda sudah mengikuti Diklat Kepemimpinan? <span class="text-red-500">*</span></label>
-         <div class="space-y-2">
-          <label class="flex items-center cursor-pointer">
-           <input type="radio" name="diklat_status" value="sudah" required class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500">
-           <span class="ml-3 text-gray-700 font-medium">Sudah</span>
-          </label>
-          <label class="flex items-center cursor-pointer">
-           <input type="radio" name="diklat_status" value="belum" required class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500">
-           <span class="ml-3 text-gray-700 font-medium">Belum</span>
-          </label>
-         </div>
-        </div>
-       </div>
-      </div>
-
       <!-- Satuan Kerja & Jabatan Section -->
       <div class="mb-8">
        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -442,50 +415,82 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
             </svg>
           </span>
-          Data Diklat Kepemimpinan
+          Status Diklat Kepemimpinan
         </h2>
       `;
       container.appendChild(sectionHeader);
 
+      // Create individual question for each diklat type
       diklats.forEach(diklat => {
-        const section = document.createElement("div");
-        section.className = "diklat-section bg-gray-50 rounded-2xl p-6 mb-4 border-l-4 border-blue-600";
-        section.innerHTML = `
-          <h3 class="font-semibold text-gray-800 mb-4 flex items-center">
-            <span class="w-6 h-6 badge-blue text-white rounded-full flex items-center justify-center text-xs mr-2 font-bold">${diklat.charAt(diklat.length-1)}</span>
-            ${diklatNames[diklat]}
-          </h3>
+        createDiklatQuestion(container, diklat);
+      });
+    }
+
+    function createDiklatQuestion(container, diklat) {
+      const questionSection = document.createElement("div");
+      questionSection.className = "diklat-section bg-gray-50 rounded-2xl p-6 mb-4 border-l-4 border-blue-600";
+      questionSection.id = `section-${diklat.toLowerCase()}`;
+      
+      questionSection.innerHTML = `
+        <h3 class="font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="w-6 h-6 badge-blue text-white rounded-full flex items-center justify-center text-xs mr-2 font-bold">${diklat.charAt(diklat.length-1)}</span>
+          ${diklatNames[diklat]}
+        </h3>
+        
+        <!-- Question: Sudah atau Belum -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-3">
+            Apakah Anda sudah mengikuti ${diklatNames[diklat]}? <span class="text-red-500">*</span>
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" name="status_${diklat.toLowerCase()}" value="sudah" required 
+                     class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                     onchange="toggleDiklatForm('${diklat.toLowerCase()}', true)">
+              <span class="ml-3 text-gray-700 font-medium">Sudah</span>
+            </label>
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" name="status_${diklat.toLowerCase()}" value="belum" required 
+                     class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                     onchange="toggleDiklatForm('${diklat.toLowerCase()}', false)">
+              <span class="ml-3 text-gray-700 font-medium">Belum</span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Form Detail (hidden by default) -->
+        <div id="form-${diklat.toLowerCase()}" class="hidden mt-4 pt-4 border-t border-gray-300">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Sertifikat <span class="text-red-500">*</span></label>
-              <input type="text" name="diklat_${diklat.toLowerCase()}_nomor" required
+              <input type="text" name="diklat_${diklat.toLowerCase()}_nomor" 
                 class="w-full px-4 py-3 border border-gray-200 rounded-xl input-focus focus:border-blue-500 focus:outline-none transition-all bg-white"
-                placeholder="Nomor sertifikat">
+                placeholder="Nomor sertifikat" disabled>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Sertifikat <span class="text-red-500">*</span></label>
-              <input type="date" name="diklat_${diklat.toLowerCase()}_tanggal" required
+              <input type="date" name="diklat_${diklat.toLowerCase()}_tanggal" 
                 class="w-full px-4 py-3 border border-gray-200 rounded-xl input-focus focus:border-blue-500 focus:outline-none transition-all bg-white"
-                max="${new Date().toISOString().split('T')[0]}">
+                max="${new Date().toISOString().split('T')[0]}" disabled>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Penyelenggara <span class="text-red-500">*</span></label>
-              <input type="text" name="diklat_${diklat.toLowerCase()}_penyelenggara" required
+              <input type="text" name="diklat_${diklat.toLowerCase()}_penyelenggara" 
                 class="w-full px-4 py-3 border border-gray-200 rounded-xl input-focus focus:border-blue-500 focus:outline-none transition-all bg-white"
-                placeholder="Nama penyelenggara">
+                placeholder="Nama penyelenggara" disabled>
             </div>
           </div>
           <div class="mt-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Upload Berkas Diklat (PDF/JPG/PNG) <span class="text-red-500">*</span></label>
-            <div class="border-2 border-dashed border-blue-300 rounded-xl p-4 text-center hover:border-blue-600 hover:bg-blue-50 transition-all cursor-pointer" 
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center cursor-not-allowed opacity-50" 
                  id="file-drop-${diklat.toLowerCase()}">
               <input type="file" 
                      name="diklat_${diklat.toLowerCase()}_file" 
                      accept=".pdf,.jpg,.jpeg,.png" 
-                     required
                      class="hidden" 
-                     id="file-input-${diklat.toLowerCase()}">
-              <svg class="w-8 h-8 mx-auto text-blue-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     id="file-input-${diklat.toLowerCase()}"
+                     disabled>
+              <svg class="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
               </svg>
               <p class="text-sm text-gray-600 font-medium">Klik atau drag file ke sini</p>
@@ -493,28 +498,68 @@
               <p class="text-xs text-gray-600 mt-2 font-medium" id="file-name-${diklat.toLowerCase()}"></p>
             </div>
           </div>
-        `;
-        container.appendChild(section);
+        </div>
+      `;
+      
+      container.appendChild(questionSection);
+    }
 
-        // Setup file upload handlers
-        const dropZone = section.querySelector(`#file-drop-${diklat.toLowerCase()}`);
-        const fileInput = section.querySelector(`#file-input-${diklat.toLowerCase()}`);
+    function toggleDiklatForm(diklatType, show) {
+      const formDiv = document.getElementById(`form-${diklatType}`);
+      const dropZone = document.getElementById(`file-drop-${diklatType}`);
+      const fileInput = document.getElementById(`file-input-${diklatType}`);
+      
+      if (show) {
+        // Show form and enable inputs
+        formDiv.classList.remove('hidden');
         
+        // Enable all inputs in the form
+        formDiv.querySelectorAll('input').forEach(input => {
+          input.disabled = false;
+          if (input.type !== 'file') {
+            input.required = true;
+          } else {
+            input.required = true;
+          }
+        });
+        
+        // Enable file drop zone
+        dropZone.classList.remove('opacity-50', 'cursor-not-allowed', 'border-gray-300');
+        dropZone.classList.add('cursor-pointer', 'border-blue-300', 'hover:border-blue-600', 'hover:bg-blue-50');
+        
+        // Setup file upload handlers
         dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFileSelect(e.target, diklat.toLowerCase()));
-        setupDragDrop(dropZone, fileInput, diklat.toLowerCase());
-      });
+        fileInput.addEventListener('change', (e) => handleFileSelect(e.target, diklatType));
+        setupDragDrop(dropZone, fileInput, diklatType);
+        
+      } else {
+        // Hide form and disable inputs
+        formDiv.classList.add('hidden');
+        
+        // Disable and clear all inputs
+        formDiv.querySelectorAll('input').forEach(input => {
+          input.disabled = true;
+          input.required = false;
+          if (input.type !== 'file') {
+            input.value = '';
+          } else {
+            input.value = null;
+          }
+        });
+        
+        // Disable file drop zone
+        dropZone.classList.add('opacity-50', 'cursor-not-allowed', 'border-gray-300');
+        dropZone.classList.remove('cursor-pointer', 'border-blue-300', 'hover:border-blue-600', 'hover:bg-blue-50', 'border-green-500', 'bg-green-50');
+        
+        // Clear file name display
+        const fileName = document.getElementById(`file-name-${diklatType}`);
+        if (fileName) fileName.textContent = '';
+      }
     }
 
     function toggleDiklatSections() {
-      const status = document.querySelector('input[name="diklat_status"]:checked')?.value;
-      const container = document.getElementById("diklat-container");
-      
-      if (status === "sudah") {
-        generateDiklatSections();
-      } else {
-        container.innerHTML = "";
-      }
+      // This function is no longer needed with new flow, but keep for compatibility
+      generateDiklatSections();
     }
 
     // ========================================
@@ -604,15 +649,47 @@
       }
       document.getElementById("nip-error").classList.add("hidden");
 
-      const diklatStatus = document.querySelector('input[name="diklat_status"]:checked')?.value;
+      // Get individual diklat status
+      const statusPKN = document.querySelector('input[name="status_pkn"]:checked')?.value || "belum";
+      const statusPKP = document.querySelector('input[name="status_pkp"]:checked')?.value || "belum";
+      const statusPKA = document.querySelector('input[name="status_pka"]:checked')?.value || "belum";
       
       setButtonLoading(submitBtn, true);
 
       try {
-        // Collect file data
+        // Collect file data with better error handling
         const filePKN = document.querySelector('#file-input-pkn')?.files[0];
         const filePKP = document.querySelector('#file-input-pkp')?.files[0];
         const filePKA = document.querySelector('#file-input-pka')?.files[0];
+
+        console.log("Files detected:", {
+          PKN: filePKN ? filePKN.name : "none",
+          PKP: filePKP ? filePKP.name : "none",
+          PKA: filePKA ? filePKA.name : "none"
+        });
+
+        // Convert files to base64
+        let base64PKN = "";
+        let base64PKP = "";
+        let base64PKA = "";
+
+        if (filePKN && statusPKN === "sudah") {
+          console.log("Converting PKN file to base64...");
+          base64PKN = await fileToBase64(filePKN);
+          console.log("PKN base64 length:", base64PKN ? base64PKN.length : 0);
+        }
+
+        if (filePKP && statusPKP === "sudah") {
+          console.log("Converting PKP file to base64...");
+          base64PKP = await fileToBase64(filePKP);
+          console.log("PKP base64 length:", base64PKP ? base64PKP.length : 0);
+        }
+
+        if (filePKA && statusPKA === "sudah") {
+          console.log("Converting PKA file to base64...");
+          base64PKA = await fileToBase64(filePKA);
+          console.log("PKA base64 length:", base64PKA ? base64PKA.length : 0);
+        }
 
         // Prepare payload for Google Apps Script
         const payload = {
@@ -620,34 +697,41 @@
           nip: formData.get("nip"),
           satuan_kerja: formData.get("satuan_kerja"),
           jabatan: formData.get("jabatan"),
-          diklat_status: diklatStatus,
+          
+          // Individual status for each diklat type
+          status_pkn: statusPKN,
+          status_pkp: statusPKP,
+          status_pka: statusPKA,
 
-          diklat_pkn_nomor: formData.get("diklat_pkn_nomor") || "",
-          diklat_pkn_tanggal: formData.get("diklat_pkn_tanggal") || "",
-          diklat_pkn_penyelenggara: formData.get("diklat_pkn_penyelenggara") || "",
+          diklat_pkn_nomor: statusPKN === "sudah" ? (formData.get("diklat_pkn_nomor") || "") : "",
+          diklat_pkn_tanggal: statusPKN === "sudah" ? (formData.get("diklat_pkn_tanggal") || "") : "",
+          diklat_pkn_penyelenggara: statusPKN === "sudah" ? (formData.get("diklat_pkn_penyelenggara") || "") : "",
 
-          diklat_pkp_nomor: formData.get("diklat_pkp_nomor") || "",
-          diklat_pkp_tanggal: formData.get("diklat_pkp_tanggal") || "",
-          diklat_pkp_penyelenggara: formData.get("diklat_pkp_penyelenggara") || "",
+          diklat_pkp_nomor: statusPKP === "sudah" ? (formData.get("diklat_pkp_nomor") || "") : "",
+          diklat_pkp_tanggal: statusPKP === "sudah" ? (formData.get("diklat_pkp_tanggal") || "") : "",
+          diklat_pkp_penyelenggara: statusPKP === "sudah" ? (formData.get("diklat_pkp_penyelenggara") || "") : "",
 
-          diklat_pka_nomor: formData.get("diklat_pka_nomor") || "",
-          diklat_pka_tanggal: formData.get("diklat_pka_tanggal") || "",
-          diklat_pka_penyelenggara: formData.get("diklat_pka_penyelenggara") || "",
+          diklat_pka_nomor: statusPKA === "sudah" ? (formData.get("diklat_pka_nomor") || "") : "",
+          diklat_pka_tanggal: statusPKA === "sudah" ? (formData.get("diklat_pka_tanggal") || "") : "",
+          diklat_pka_penyelenggara: statusPKA === "sudah" ? (formData.get("diklat_pka_penyelenggara") || "") : "",
 
-          file_pkn_base64: filePKN ? await fileToBase64(filePKN) : "",
-          file_pkn_name: filePKN?.name || "",
-          file_pkn_type: filePKN?.type || "",
+          file_pkn_base64: base64PKN,
+          file_pkn_name: filePKN ? filePKN.name : "",
+          file_pkn_type: filePKN ? filePKN.type : "",
 
-          file_pkp_base64: filePKP ? await fileToBase64(filePKP) : "",
-          file_pkp_name: filePKP?.name || "",
-          file_pkp_type: filePKP?.type || "",
+          file_pkp_base64: base64PKP,
+          file_pkp_name: filePKP ? filePKP.name : "",
+          file_pkp_type: filePKP ? filePKP.type : "",
 
-          file_pka_base64: filePKA ? await fileToBase64(filePKA) : "",
-          file_pka_name: filePKA?.name || "",
-          file_pka_type: filePKA?.type || "",
+          file_pka_base64: base64PKA,
+          file_pka_name: filePKA ? filePKA.name : "",
+          file_pka_type: filePKA ? filePKA.type : "",
 
           created_at: new Date().toISOString()
         };
+
+        console.log("Payload prepared, sending to Apps Script...");
+
 
         // Send to Google Apps Script
         const body = new URLSearchParams();
@@ -812,17 +896,7 @@
 
       // Setup jabatan change handler
       document.getElementById("jabatan").addEventListener("change", () => {
-        const diklatStatus = document.querySelector('input[name="diklat_status"]:checked')?.value;
-        if (diklatStatus === "sudah") {
-          generateDiklatSections();
-        } else {
-          document.getElementById("diklat-container").innerHTML = "";
-        }
-      });
-
-      // Setup diklat status change handler
-      document.querySelectorAll('input[name="diklat_status"]').forEach(radio => {
-        radio.addEventListener('change', toggleDiklatSections);
+        generateDiklatSections();
       });
 
       // Setup form submission
